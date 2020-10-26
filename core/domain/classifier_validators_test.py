@@ -1,6 +1,6 @@
 # coding: utf-8
 #
-# Copyright 2020 The Oppia Authors. All Rights Reserved.
+# Copyright 2019 The Oppia Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,18 +27,41 @@ from core.domain import fs_services
 from core.domain import prod_validation_jobs_one_off
 from core.platform import models
 from core.tests import test_utils
+
 import feconf
 import python_utils
 
 datastore_services = models.Registry.import_datastore_services()
-(classifier_models, exp_models) = models.Registry.import_models([
-    models.NAMES.classifier, models.NAMES.exploration])
+gae_search_services = models.Registry.import_search_services()
+
+USER_EMAIL = 'useremail@example.com'
+USER_NAME = 'username'
+CURRENT_DATETIME = datetime.datetime.utcnow()
+
+(
+    audit_models, classifier_models, collection_models,
+    config_models, email_models, exp_models,
+    feedback_models, improvements_models, job_models,
+    opportunity_models, question_models,
+    recommendations_models, skill_models, stats_models,
+    story_models, subtopic_models, suggestion_models,
+    topic_models, user_models
+) = models.Registry.import_models([
+    models.NAMES.audit, models.NAMES.classifier, models.NAMES.collection,
+    models.NAMES.config, models.NAMES.email, models.NAMES.exploration,
+    models.NAMES.feedback, models.NAMES.improvements, models.NAMES.job,
+    models.NAMES.opportunity, models.NAMES.question,
+    models.NAMES.recommendations, models.NAMES.skill, models.NAMES.statistics,
+    models.NAMES.story, models.NAMES.subtopic, models.NAMES.suggestion,
+    models.NAMES.topic, models.NAMES.user
+])
 
 
 class ClassifierTrainingJobModelValidatorTests(test_utils.AuditJobsTestBase):
 
     def setUp(self):
         super(ClassifierTrainingJobModelValidatorTests, self).setUp()
+
         self.signup(self.OWNER_EMAIL, self.OWNER_USERNAME)
 
         self.owner_id = self.get_user_id_from_email(self.OWNER_EMAIL)
